@@ -1,8 +1,9 @@
 ## Testing for farmingCalculator.c
 
-### By Myles Holt
+## By Myles Holt
 
-##### Testing
+
+### Testing
 
 To test `farmingCalculator.c`, a bash script titled `tests.sh` is utilized.
 
@@ -10,11 +11,11 @@ This bash script tests various command line arguments, including both valid
 
 and invalid ones. 
 
-##### How to Use the Bash Script
+### How to Use the Bash Script
 
 To run the bash script, type `bash tests.sh`
 
-##### Example 
+### Example 
 
 The commandline follows the structure `./farmingCalculator normalTree fruitTree currXP goalLevel`
 
