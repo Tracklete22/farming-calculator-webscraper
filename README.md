@@ -1,24 +1,25 @@
 ## Farming Efficiency Calculator
 
-### By Myles Holt
+## By Myles Holt
 
-##### farmingCalculator
+
+### farmingCalculator
 
 `farmingCalculator.c` Calculates the efficiency of using different types of tree saplings while training
 the farming skill on Runescape. The program calculates the GP/XP based on prices of tree 
 saplings that are updated daily on Runescape's website, total GP loss, and number of days to reach
 the desired goal level.
 
-##### Background Information
+### Background Information
 
-######---General information --
+**General information**
 Oldschool Runescape is an MMO (massive multiplayer online) game with a thriving economy and plenty of skills to train. Each skill can be trained
 from level 1 to a maximum level of 99. The farming skill (what this program is evaluating) is one of these skills. Each level in the skill
 requires a certain amount of experience. The amount of experience required per level increases between levels, making it more difficult
 as you progress
 
-######-- How Farming is Trained --
-Although there are several methods of training farming, this program **focuses on tree running** due to the large amount of xp the runs give
+**How Farming is Trained**
+Although there are several methods of training farming, this program focuses on tree running due to the large amount of xp the runs give
 as well as the little amount of time they take per day (~ 5 minutes). Tree running is a method where a player buys saplings from the 
 grand exchange (a trading system where players can buy and sell items), plants saplings at various patch locations around Runescape, and after 
 waiting the desired amount of time for the saplings to grow (~ 6 to 21 hours depending on the tree type), revisits each of the patches and checks
@@ -27,7 +28,7 @@ various growth times for the different tree types, players tend to do one tree r
 
 For more information on the farming skill, visit "http://oldschoolrunescape.wikia.com/wiki/Farming"
 
-######--Tree Running in Detail-- 
+**Tree Running in Detail**
 
 1) Player buys both fruit and tree saplings from the grand exchange. If the player is level 72 farming,
    the calculator assumes that the player will also buy calquat saplings (a special tree type) due to their low cost and high experience rate. 
@@ -49,86 +50,102 @@ For more information on the farming skill, visit "http://oldschoolrunescape.wiki
 
 5) Plant new saplings, and repeat
 
-##### Inspiration
+### Inspiration
 
 The program calculates important information regarding costs and time. This is a skill that me and many others are currently
 training, and this program will help players plan an effective strategy based on the player's care for the cost, time, 
 or both. I also found it pretty fun and cool to make!
 
-##### Usage
+### Usage
 
 the farmingCalculator module is defined and implemented in farmingCalculator.c 
 
 /*Initializes structs and variables, checks validity of command line arguments, and calls various functions that allow
-  the program to operate*/
+  the program to operate*/  
+
 int main(int argc, char* argv[]);
 
 
 /*Grab and return price from the given URL (assumes the URL is taken from
-the Runescape's grand exchange website*/
+the Runescape's grand exchange website*/  
+
 int extractPrice(char* string);
 
-/*Grabs the HTML from a given URL*/
+/*Grabs the HTML from a given URL*/  
+
 char* getHTMLFromPage(char* url);
 
 
-/*Assign url to the correct normal tree type*/
+/*Assign url to the correct normal tree type*/  
+
 char* assignNormalURL(char* normalTree);
 
 
-/*Assign url to the correct fruit tree type*/
+/*Assign url to the correct fruit tree type*/  
+
 char* assignFruitURL(char* fruitTree);
 
 
 /*Inserts XP rates for each sapling into a hashtable. 
-   Key = tree type, item = XP granted per farming patch for the sapling*/  
+   Key = tree type, item = XP granted per farming patch for the sapling*/    
+
 void insertIntoHashtable(hashtable_t* saplingXPRates);
 
 
 /*Calculates the amount of experience a player can expect per day based on the normal tree
-and fruit tree that are chosen. Also assumes one farm run per day. Used in the daysTillGoal function*/
+and fruit tree that are chosen. Also assumes one farm run per day. Used in the daysTillGoal function*/  
+
 float experiencePerDay (hashtable_t *ht, char* normalTree, char* fruitTree, int currXP);
 
 
 /*Converts player's current experience in the farming skill to their level
-   based on Runescape's algorithm*/
+   based on Runescape's algorithm*/  
+
 int convertCurrXPtoLevel(int currXP);
 
 
 /*Converts player's current level in the farming skill to their experience
-   based on Runescape's algorithm*/
+   based on Runescape's algorithm*/  
+
 float convertGoalLevelToXP(int goalLevel);
 
 
 /*Calculates the number of days it will take the player to reach their
-   goal level*/
+   goal level*/  
+
 int daysTillGoal(int currXP, int goalLevel, int XPPerDay);
 
 
-/*Calculates the number of gp that will be lost per experienced gained*/
+/*Calculates the number of gp that will be lost per experienced gained*/  
+
 void gpPerXP(hashtable_t *ht, int currXP, int normalPrice, int fruitPrice, char* normalTree, char* fruitTree);
 
 
 /*Calculates the total number of GP (gold pieces) that will be lost as
-   as a result of achieving the desired goal level*/
+   as a result of achieving the desired goal level*/  
+
 int totalGPLoss(int normalPrice, int fruitPrice, int days);
 
 
-##### Exit Codes
+### Exit Codes
 
-Exit 1 - Current xp is less than 83 (not possible, player begins with 83 xp at lvl 1)
-Exit 2 - Goal level must be between 2 and 99 
-Exit 3 - Goal level must be greater than the current level 
-Exit 4 - Invalid input for normalTree type on cmd line
+Exit 1 - Current xp is less than 83 (not possible, player begins with 83 xp at lvl 1)  
+
+Exit 2 - Goal level must be between 2 and 99   
+
+Exit 3 - Goal level must be greater than the current level  
+
+Exit 4 - Invalid input for normalTree type on cmd line  
+
 Exit 5 - Invalid input for fruitTree type on cmd line
 
-###### Assumptions
+### Assumptions
 
 - Only one farming run is executed per day
 - A player has access to the five normal and fruit tree patches 
 - If the player is at least 72 farming, the calquat tree type will automatically be included in the calculation
 
-##### Libraries
+### Libraries
 
 - The program makes use of the library `libcs50`, which is a library that was used in my CS50 course (Software
   Design and Implementation). Most of these modules were written by professor David Kotz. However, `hashtable.c/h, bag.c/h, set.c/h, and counters.c/h` 
@@ -136,7 +153,7 @@ Exit 5 - Invalid input for fruitTree type on cmd line
 
 - farmingCalculator.c makes use of hashtable.h and webpage.h from the libcs50 library 
 
-##### Compilation
+### Compilation
 
 - Utilizes a makefile to compile all of the necessary components
 - To compile, simply type `make`

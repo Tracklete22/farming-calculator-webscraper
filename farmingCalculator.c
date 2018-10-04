@@ -41,7 +41,8 @@ char* palmURL = "http://services.runescape.com/m=itemdb_oldschool/Palm_sapling/v
 char* papayaURL = "http://services.runescape.com/m=itemdb_oldschool/Papaya_sapling/viewitem?obj=5501";
 char* calquatURL = "http://services.runescape.com/m=itemdb_oldschool/Calquat_sapling/viewitem?obj=5503";
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) 
+{
 
 	if (argc == 5) {
 
@@ -121,8 +122,8 @@ int main(int argc, char* argv[]) {
 }
 
 /* Grabs the HTML from a given URL */
-char* getHTMLFromPage (char* url) {
-
+char* getHTMLFromPage (char* url) 
+{
 	// create a new webpage based on the url passed through
 	webpage_t *itemPage = webpage_new(url, 0, NULL);
 
@@ -135,24 +136,21 @@ char* getHTMLFromPage (char* url) {
 
 /* Grab and return price from the given URL (assumes the URL is taken from
 the Runescape's grand exchange website */
-int extractPrice(char* string) {
-	
+int extractPrice(char* string) 
+{	
 	/* Splices out all of the html until "Guide" is seen, then 
-	   until "'" is seen. The next characters in the HTML code
-	   will be the sapling's price */
-
+	until "'" is seen. The next characters in the HTML code
+	will be the sapling's price */
 	char* remove = strstr(string, "Guide");
 	char* start = strstr(remove, "'");
 
 	char rawPrice[50]; // Price extracted from url, including commas
 	
-
 	int i = 0;
 	
 	/* Loop through the price and add it to the char array. 
-	   e.g. should look something like: 73,203
-	*/
-	while (start[i] != '>')  {
+	   e.g. should look something like: 73,203 */
+	while (start[i] != '>') {
 		rawPrice[i] = start[i];
 		i++;
 	} 
@@ -160,15 +158,15 @@ int extractPrice(char* string) {
 	int x = 0;
 	char splicedPrice[10]; // New array with the commas removed e.g. 73203
 
-for (int j = 0; j < strlen(rawPrice) - 1; j++) {
+	for (int j = 0; j < strlen(rawPrice) - 1; j++) {
 
-			// If char is not a digit, it must be a comma, so skip it
-			if (!(isdigit(rawPrice[j]))) {
-				continue;
-			}
+		// If char is not a digit, it must be a comma, so skip it
+		if (!(isdigit(rawPrice[j]))) {
+			continue;
+		}
 
-			splicedPrice[x] = rawPrice[j];
-			x++;
+		splicedPrice[x] = rawPrice[j];
+		x++;
 	}
 
 	int priceAsInt;
@@ -180,65 +178,63 @@ for (int j = 0; j < strlen(rawPrice) - 1; j++) {
 
 /* Inserts XP rates for each sapling into a hashtable. 
    Key = tree type, item = XP granted per farming patch for the sapling */  
-void insertIntoHashtable(hashtable_t* saplingXPRates) {
-
-		hashtable_insert(saplingXPRates, "oak", (void*)481);
-		hashtable_insert(saplingXPRates, "willow", (void*)1481);
-		hashtable_insert(saplingXPRates, "maple",(void*) 3448);
-		hashtable_insert(saplingXPRates, "yew", (void*)7151);
-		hashtable_insert(saplingXPRates, "magic", (void*)13914);
-		hashtable_insert(saplingXPRates, "apple", (void*)1272);
-		hashtable_insert(saplingXPRates, "banana", (void*)1841);
-		hashtable_insert(saplingXPRates, "curry", (void*)3037);
-		hashtable_insert(saplingXPRates, "orange", (void*)2587);
-		hashtable_insert(saplingXPRates, "pineapple",(void*) 4792);
-		hashtable_insert(saplingXPRates, "palm", (void*)10510);
-		hashtable_insert(saplingXPRates, "papaya", (void*)6380);
-		hashtable_insert(saplingXPRates, "calquat", (void*)12244);
+void insertIntoHashtable(hashtable_t* saplingXPRates) 
+{
+	hashtable_insert(saplingXPRates, "oak", (void*)481);
+	hashtable_insert(saplingXPRates, "willow", (void*)1481);
+	hashtable_insert(saplingXPRates, "maple",(void*) 3448);
+	hashtable_insert(saplingXPRates, "yew", (void*)7151);
+	hashtable_insert(saplingXPRates, "magic", (void*)13914);
+	hashtable_insert(saplingXPRates, "apple", (void*)1272);
+	hashtable_insert(saplingXPRates, "banana", (void*)1841);
+	hashtable_insert(saplingXPRates, "curry", (void*)3037);
+	hashtable_insert(saplingXPRates, "orange", (void*)2587);
+	hashtable_insert(saplingXPRates, "pineapple",(void*) 4792);
+	hashtable_insert(saplingXPRates, "palm", (void*)10510);
+	hashtable_insert(saplingXPRates, "papaya", (void*)6380);
+	hashtable_insert(saplingXPRates, "calquat", (void*)12244);
 }
 
 /* Converts player's current experience in the farming skill to their level
    based on Runescape's algorithm */
-int convertCurrXPtoLevel(int currXP) {
-	
-		int level = 1;
+int convertCurrXPtoLevel(int currXP) 
+{
+	int level = 1;
 
-		// Experience needed for the next level increase by a factor of ~1.10409 per level
-		float factor = 1.10409; 
-		// Characters begin with 83 experience in the farming skill
-		float sumXP = 83.0; 
+	// Experience needed for the next level increase by a factor of ~1.10409 per level
+	float factor = 1.10409; 
+	// Characters begin with 83 experience in the farming skill
+	float sumXP = 83.0; 
 
-		// Keep increasing sumXP until the current XP is hit, while incrementing level
-		while (sumXP < currXP) {
+	// Keep increasing sumXP until the current XP is hit, while incrementing level
+	while (sumXP < currXP) {
+		sumXP = (sumXP * factor) + 83;
+		level++;
+	}
 
-			sumXP = (sumXP * factor) + 83;
-			level++;
-		}
-
-		return level;
+	return level;
 }
 
 /* Converts player's current level in the farming skill to their experience
    based on Runescape's algorithm */
-float convertGoalLevelToXP(int goalLevel) {
-
+float convertGoalLevelToXP(int goalLevel) 
+{
 	int level = 2;
 	float factor = 1.10409;
 	float sumXP = 83.0;
 
 	while (level < goalLevel) {
-
 		sumXP = (sumXP * factor) + 83;
 		level++;
 	}
 
 	return sumXP;
-
 }
 
 /* Calculates the amount of experience a player can expect per day based on the normal tree
 and fruit tree that are chosen. Also assumes one farm run per day. Used in the daysTillGoal function */
-float experiencePerDay (hashtable_t *ht, char* normalTree, char* fruitTree, int currXP) {
+float experiencePerDay (hashtable_t *ht, char* normalTree, char* fruitTree, int currXP) 
+{
 
 	float total = 0.0; // Experience gained
 
@@ -266,62 +262,64 @@ float experiencePerDay (hashtable_t *ht, char* normalTree, char* fruitTree, int 
 
 /* Calculates the number of days it will take the player to reach their
    goal level */
-int daysTillGoal(int currXP, int goalLevel, int XPPerDay) {
+int daysTillGoal(int currXP, int goalLevel, int XPPerDay) 
+{
 
-		int goalXP = convertGoalLevelToXP(goalLevel);
-		int XPToGain = goalXP - currXP;
+	int goalXP = convertGoalLevelToXP(goalLevel);
+	int XPToGain = goalXP - currXP;
 
-		int numDays = (XPToGain / XPPerDay) + 1;
+	int numDays = (XPToGain / XPPerDay) + 1;
 
-		return numDays;
+	return numDays;
 }
 
 /* Calculates the total number of GP (gold pieces) that will be lost as
    as a result of achieving the desired goal level */
-int totalGPLoss(int normalPrice, int fruitPrice, int days) {
-		
-		int totalLoss;
+int totalGPLoss(int normalPrice, int fruitPrice, int days) 
+{
+	int totalLoss;
 
-		// Multiply by 5 because there are 5 patches for each type
-		int LossPerDay = (normalPrice * 5) + (fruitPrice * 5);
+	// Multiply by 5 because there are 5 patches for each type
+	int LossPerDay = (normalPrice * 5) + (fruitPrice * 5);
 
-		totalLoss = LossPerDay * days;
+	totalLoss = LossPerDay * days;
 
-		printf("It will take %d days to Achieve your goal, with a total GP loss of %d\n", days, totalLoss);
+	printf("It will take %d days to Achieve your goal, with a total GP loss of %d\n", days, totalLoss);
 
-		return totalLoss;
+	return totalLoss;
 }
 
 /* Calculates the number of gp that will be lost per experienced gained */
-void gpPerXP(hashtable_t *ht, int currXP, int normalPrice, int fruitPrice, char* normalTree, char* fruitTree) {
+void gpPerXP(hashtable_t *ht, int currXP, int normalPrice, int fruitPrice, char* normalTree, char* fruitTree) 
+{
 		
-		// Divide price by xp and negate the result to get the GP/XP
-		int normalTreeXP = (uintptr_t)hashtable_find(ht, normalTree);
-		double normalGPPerXP = -((double) normalPrice / (double) normalTreeXP);
+	// Divide price by xp and negate the result to get the GP/XP
+	int normalTreeXP = (uintptr_t)hashtable_find(ht, normalTree);
+	double normalGPPerXP = -((double) normalPrice / (double) normalTreeXP);
 
-		printf("The GP/XP for a %s tree is %f\n", normalTree, normalGPPerXP);
+	printf("The GP/XP for a %s tree is %f\n", normalTree, normalGPPerXP);
 
-		// Do the same for the fruit tree type 
-		int fruitTreeXP = (uintptr_t)hashtable_find(ht, fruitTree);
-		double fruitGPPerXP = -((double) fruitPrice / (double) fruitTreeXP);
+	// Do the same for the fruit tree type 
+	int fruitTreeXP = (uintptr_t)hashtable_find(ht, fruitTree);
+	double fruitGPPerXP = -((double) fruitPrice / (double) fruitTreeXP);
 
-		printf("The GP/XP for a %s tree is %f\n", fruitTree, fruitGPPerXP);
+	printf("The GP/XP for a %s tree is %f\n", fruitTree, fruitGPPerXP);
 
-		// If the player's level is at least 72, do it for the special calquat tree as well
-		if (convertCurrXPtoLevel(currXP) >= 72) {
+	// If the player's level is at least 72, do it for the special calquat tree as well
+	if (convertCurrXPtoLevel(currXP) >= 72) {
 
-			int calquatTreeXP = (uintptr_t)hashtable_find(ht, "calquat");
-			int calquatPrice = extractPrice(getHTMLFromPage(calquatURL));
+		int calquatTreeXP = (uintptr_t)hashtable_find(ht, "calquat");
+		int calquatPrice = extractPrice(getHTMLFromPage(calquatURL));
 
-			double calquatGPPerXP = -((double) calquatPrice / (double) calquatTreeXP);
+		double calquatGPPerXP = -((double) calquatPrice / (double) calquatTreeXP);
 
-			printf("GP/XP for a calquat tree is %f\n", calquatGPPerXP);
-		}	
+		printf("GP/XP for a calquat tree is %f\n", calquatGPPerXP);
+	}	
 }
 
 /* Assign url to the correct normal tree type */
-char* assignNormalURL(char* normalTree) {
-
+char* assignNormalURL(char* normalTree) 
+{
 	bool urlChanged = false;
 	char *url;
 
@@ -359,8 +357,8 @@ char* assignNormalURL(char* normalTree) {
 }
 
 /* Assign url to the correct fruit tree type */
-char* assignFruitURL(char* fruitTree) {
-
+char* assignFruitURL(char* fruitTree) 
+{
 	bool urlChanged = false;
 	char *url;
 
